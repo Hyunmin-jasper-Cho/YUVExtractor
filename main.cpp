@@ -53,9 +53,7 @@ yuv2png_10bit(meta_vec& mv, fs::path& yuv_root, fs::path& png_root);
 
 
 int
-main() {
-    int argc = 6;
-    char * argv[6] = {"", "../YUVs", "../PNGs", "1920", "1080", "8"}; // yuv root, png root, wid and hei
+main(int argc, char *argv[]) {
 
     /*
     Target YUV folder is in the same level of the file
