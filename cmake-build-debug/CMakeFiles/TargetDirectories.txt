@@ -1,3 +1,0 @@
-/home/hyun/CLionProjects/YUV2PNG_CP20/cmake-build-debug/CMakeFiles/YUV2PNG_CP20.dir
-/home/hyun/CLionProjects/YUV2PNG_CP20/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/hyun/CLionProjects/YUV2PNG_CP20/cmake-build-debug/CMakeFiles/rebuild_cache.dir
