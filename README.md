@@ -6,7 +6,7 @@ and it makes each .yuv sequence into .png format, which consists of y000.png, u0
 ## Environment 
 Project built environment  
 > OS: Linux Ubuntu 20.04 LTS  
-> Required libraries: **opencv & opencv_contrib (IMPORTANT)**   
+> Required libraries: **[OpenCV](https://github.com/opencv/opencv) & [OpenCV_extraModule](https://github.com/opencv/opencv_contrib) (IMPORTANT)**   
 > build base: gnu++20 / also worked on apple clang 13  
 > cmake version: **higher than 3.16**  
 
