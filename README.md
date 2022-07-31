@@ -1,6 +1,19 @@
 # YUV2PNG 
 YUV2PNG is one of the preprocessing processes of the [ Video super resolution](https://github.com/Hyunmin-jasper-Cho/YU-VSR) project,  
-and it makes each .yuv sequence into .png format, which consists of y000.png, u000.png and v000.png. 
+and it makes each .yuv sequence into .png format, which consists of y000.png, u000.png and v000.png.  
+
+## Sample Result
+> About sample  
+> Viewer: [YUView](https://github.com/IENT/YUView)  
+> Sample: [BVI-DVC](https://research-information.bris.ac.uk/en/datasets/bvi-dvc)  
+>  
+> Original YUV images  
+![original](./figures/original.png)  
+> Y, U and V component  
+![Y](./figures/Y.png)  
+![U](./figures/U.png)  
+![V](./figures/V.png)  
+
 
 ## Environment 
 To run this project, you should complete build setting. 
