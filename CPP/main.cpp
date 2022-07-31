@@ -232,55 +232,6 @@ yuv2png_8bit(meta_vec& mv, fs::path& yuv_root, fs::path& png_root) {
 
 void
 yuv2png_10bit(meta_vec& mv, fs::path& yuv_root, fs::path& png_root) {
-    // make each yuv into pngs (name_y00x.png, name_u00x.png, name_v00x.png)
-    fs::path yuv_path(yuv_root);
-    fs::path png_path(png_root);
-    str_vec yuv_comp{"y", "u", "v"};
-
-    for (auto& meta: mv) {
-
-        yuv_path /= meta.TITLE;
-        yuv_path /= meta.TITLE + ".yuv";
-        png_path /= meta.TITLE;
-
-        // declare wid and height of each yuv
-        const int wid = meta.WID;
-        const int hei = meta.HEI;
-
-        const int y_f_size = wid * hei;
-        const int uv_f_size = (wid / 2) * (hei / 2);
-
-        FILE *fid = fopen(yuv_path.c_str(), "rb");
-
-        // Total Y, U and V frame array
-        auto Y = (uchar *) malloc(y_f_size);
-        auto U = (uchar *) malloc(uv_f_size);
-        auto V = (uchar *) malloc(uv_f_size);
-
-        memset(Y, 0, sizeof(y_f_size));
-        memset(U, 0, sizeof(uv_f_size));
-        memset(U, 0, sizeof(uv_f_size));
-
-
-        for (int i = 0; i < meta.FRAME; ++i) {
-            fread(Y, sizeof(uchar), y_f_size, fid);
-            fread(U, sizeof(uchar), uv_f_size, fid);
-            fread(V, sizeof(uchar), uv_f_size, fid);
-
-
-            matrix_vec yuv{Mat(hei, wid, CV_8UC1, Y), Mat(hei / 2, wid / 2, CV_8UC1, U), Mat(hei / 2, wid / 2, CV_8UC1, V)};
-
-            // make it into .png file
-            fs::path comp_path = png_path;
-            for (int j = 0; j < 3; ++j) {
-                comp_path /= (meta.TITLE + "_" + yuv_comp[j] + std::to_string(i) + ".png");
-                imwrite(comp_path.generic_string(), yuv[j]);
-                comp_path = png_path;
-            }
-        }
-
-        // initialize root path for each epoch
-        yuv_path = yuv_root;
-        png_path = png_root;
-    }
+    std::cout << "If you want to handle yuv4:2:0 10bit, then you should \n";
+    std::cout << "run using python build. \n"; 
 }
