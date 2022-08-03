@@ -6,6 +6,14 @@ and it makes each .yuv sequence into .png/.tiff format, which consists of y000.p
 - PNG-> Make an image as grayscale RGB format.  
 - TIFF> Make an image as YUV format.  
 
+## Execution Result (TIFF format, viewer: [YUView](https://github.com/ient/yuview))
+**Original YUV**  
+<img src="./fig/Ori.png" width="900" height="600">  
+
+**TIFF Y component image**  
+<img src="./fig/Y.png" width="900" height="600">
+
+
 ## Environment 
 To run this project, you should complete build setting. 
 > OS: Linux Ubuntu 20.04 LTS  
