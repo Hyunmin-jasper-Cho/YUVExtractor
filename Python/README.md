@@ -1,7 +1,10 @@
 # YUV2PNG - Python Implementation
 This is the part of the project "YUV Video Super Resolution Scheme".   
 YUV2PNG is one of the preprocessing processes of the [ Video super resolution](https://github.com/Hyunmin-jasper-Cho/VideoSuperResolution) project,  
-and it makes each .yuv sequence into .png format, which consists of y000.png, u000.png and v000.png. 
+and it makes each .yuv sequence into .png/.tiff format, which consists of y000.png, u000.png and v000.png.  
+
+- PNG-> Make an image as grayscale RGB format.  
+- TIFF> Make an image as YUV format.  
 
 ## Environment 
 To run this project, you should complete build setting. 
@@ -14,11 +17,9 @@ To run this project, you should complete build setting.
 > 3. Run demo.sh file
 
 ## Run & Test
-- When executed, the corresponding .png file is automatically created in `PNG_root`/`your_yuv_name`/ directory.  
+- When executed, the corresponding .png/.tiff file is automatically created in `IMG_root`/`your_yuv_name`/ directory.  
 
 **Warning**
-> In current version, it support YUV4:2:0 only. 
-> And when you execute the .sh file, you should match your yuv's width and height. 
-
-> You can run just simply type `sh demo.sh`. 
+> When you execute the .sh file, you should match your yuv's **width and height**.  
+> You can run just simply type `sh demo.sh`.  
 > More information about execution is in demo.sh file. 
