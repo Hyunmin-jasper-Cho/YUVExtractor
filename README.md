@@ -1,6 +1,6 @@
-# YUV2PNG 
-YUV2PNG is one of the preprocessing processes of the [ Video super resolution](https://github.com/Hyunmin-jasper-Cho/YU-VSR) project,  
-and it makes each .yuv sequence into .png format, which consists of y000.png, u000.png and v000.png.  
+# YUVExtract  
+YUVExtract is one of the preprocessing processes of the [ Video super resolution](https://github.com/Hyunmin-jasper-Cho/YU-VSR) project,  
+and it makes each .yuv sequence into .png/.tiff format, which consists of y000.png, u000.png and v000.png.  
 
 ## Sample Result
 > About sample  

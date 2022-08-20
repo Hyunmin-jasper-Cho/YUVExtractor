@@ -2,9 +2,10 @@ import sys
 import os
 import numpy as np
 from PIL import Image
+import cv2
 
 
-def basic_information_of_YUV(YUV_src, IMG_src, wid, hei):
+def metadata_yuv(yuv_src, img_src, wid, hei):
     y_size = wid * hei
     uv_size = (wid / 2) * (hei / 2)
 
@@ -12,14 +13,14 @@ def basic_information_of_YUV(YUV_src, IMG_src, wid, hei):
     u_end = int(y_end + (uv_size))
     v_end = int(u_end + (uv_size))
 
-    yuvSize = os.path.getsize(YUV_src)
+    yuv_size = os.path.getsize(yuv_src)
 
-    return [yuvSize, y_end, u_end, v_end, IMG_src]
+    return [yuv_size, y_end, u_end, v_end, img_src]
 
 
 # https://forum.opencv.org/t/remove-6-bit-from-16-bit-depth-pixels/7938/5
 
-def yuv_preprocess(YUV_src, lst, wid, hei, bit, save_as):
+def yuv_preprocess(yuv_src, lst, wid, hei, bit, save_as):
     size = lst[0]
     y_end = lst[1]  # upper y size, wid * hei
     u_end = lst[2]  # upper u size
@@ -35,7 +36,7 @@ def yuv_preprocess(YUV_src, lst, wid, hei, bit, save_as):
     print(f'Number of frames to read: {N}')
 
     # file pointer which indicates current target YUV path
-    fp = open(YUV_src, 'rb')
+    fp = open(yuv_src, 'rb')
 
     # read full sequence
     frame = None
@@ -47,60 +48,79 @@ def yuv_preprocess(YUV_src, lst, wid, hei, bit, save_as):
 
     print(f'All frames reading complete\nWrite each y, u and v component as .{save_as} format')
 
-    yuv_name = YUV_src.split('/')[5].split('.')[0]
+    yuv_name = yuv_src.split('/')[2].split('.')[0]
 
     save_to = img_src
-    # save_to = os.path.join(img_src, yuv_name) # img_src/yuv_name (original-version)
-
+    # save_to = os.path.join(img_src, yuv_name)
     print(f'Image save path: {save_to}\n')
 
     # iterate each frame and save it into img file
     for f in range(N):
+
         # fs: frame start, init = 0
         fs = offset * f
 
-        Y = frame[fs: fs + y_end].reshape((hei, wid))
-        U = frame[fs + y_end: fs + u_end].reshape((hei // 2, wid // 2))
-        V = frame[fs + u_end: fs + v_end].reshape((hei // 2, wid // 2))
+        YCbCr = frame[fs: fs + v_end].reshape((hei, wid))
+        # U = frame[fs + y_end: fs + u_end].reshape((hei // 2, wid // 2))
+        # V = frame[fs + u_end: fs + v_end].reshape((hei // 2, wid // 2))
 
-        Y_img, U_img, V_img = makeImage(Y, U, V, bit)
+        ycbcr_img = make_image(YCbCr, bit)
+        rgb_img = cv2.cvtColor(ycbcr_img, cv2.COLOR_GRAY2RGB)
 
-        Y_img.save(f'{save_to}/Y/{yuv_name}_Y_{f}.{save_as}')
-        U_img.save(f'{save_to}/U/{yuv_name}_U_{f}.{save_as}')
-        V_img.save(f'{save_to}/V/{yuv_name}_V_{f}.{save_as}')
+        if f == 0 or f % 10 == 0:
+            ycbcr_img.save(f'{save_to}/YCbCr/{yuv_name}_YUV_{f}.{save_as}')
+            rgb_img.save(f'{save_to}/RGB/{yuv_name}_YUV_{f}.{save_as}')
 
 
-def makeImage(Y, U, V, bit: int):
+def make_image(ycbcr_np, bit: int):
     if bit == 8:
-        y = Image.fromarray(Y)
-        u = Image.fromarray(U)
-        v = Image.fromarray(V)
+        ycbcr = Image.fromarray(ycbcr_np)
 
-        return y, u, v
+        return ycbcr
     else:
-        y = Image.fromarray(Y, 'I;16')
-        u = Image.fromarray(U, 'I;16')
-        v = Image.fromarray(V, 'I;16')
+        ycbcr = Image.fromarray(ycbcr_np, 'I;16')
 
-        return y, u, v
+        return ycbcr
 
 
 def parameter_help():
     print('########################################')
     print('##       YUV2PNG-python3 runner       ##')
     print('##                                    ##')
-    print('##     you should send 6 parameters   ##')
+    print('##     you shoud send 6 parameters    ##')
     print('##      1. YUV root path (./YUVs)     ##')
     print('##      2. IMG root path (./PNGs)     ##')
     print('##            3. Bit depth            ##')
     print('##              4. width              ##')
     print('##              5. height             ##')
     print('##        6. format (lower case)      ##')
+    print('##     7. ref directory (optional)    ##')
     print('########################################\n\n')
+    print('Ref directory is used when wid and hei are unknown. ')
     print('Example command of 10bit: \n$ python3 yuv2png.py ./YUV420_10 ./PNG_10 8 3840 2160 png')
     print('Example command of  8bit: \n$ python3 yuv2png.py ./YUV420_8 ./TIFF_8 8 1920 1080 tiff')
 
     sys.exit()
+
+# 1: YUV root path \
+# 2: IMG root path \
+# 3: bit depth \
+# 4: width \
+# 5: height \
+# 6: format (yuv or tiff) \
+# 7: reference folder path \
+
+
+def get_meta(meta_img_path):
+    meta_path = meta_img_path
+    meta_path = os.path.join(meta_path, (filename.split('.')[0]) + '.png')
+    print(f'Find the original width and height value from {meta_path} ...\n')
+
+    meta_png = Image.open(meta_path)
+    wid = meta_png.width
+    hei = meta_png.height
+    print(f'Find success! wid: {wid}, hei: {hei}')
+    return wid, hei
 
 
 if __name__ == '__main__':
@@ -122,7 +142,7 @@ if __name__ == '__main__':
     
     '''
 
-    if len(sys.argv) != 7:
+    if len(sys.argv) != 8:
         parameter_help()
 
     yuv_path = sys.argv[1]
@@ -146,24 +166,12 @@ if __name__ == '__main__':
         if not os.path.exists(os.path.join(img_root, 'V')): \
                 os.makedirs(os.path.join(img_root, 'V'))
 
-        ###################################################################
-        # 둘 중 하나 라도 0 이라면, .png 등의 image 파일 에서 wid/hei 를 가져 온다. #
-        ###################################################################
-        if find_meta:
-            meta_path = '../../Real-SR/ntire20/Corrupted-tr-x'
-            meta_path = os.path.join(meta_path, (filename.split('.')[0]) + '.png')
-            print(f'Find the original width and height value from {meta_path} ...\n')
-
-            meta_png = Image.open(meta_path)
-            wid = meta_png.width
-            hei = meta_png.height
-            print(f'Find success! wid: {wid}, hei: {hei}')
-        ###################################################################
+        wid, hei = get_meta(sys.argv[7]) if find_meta is True else wid, hei
 
         # ignore hidden(trash) file (for mac os only)
         if filename[0] != '.':
             print(f'Start to process {filename}\n')
             target_yuv_path = os.path.join(yuv_path, filename)
 
-            info = basic_information_of_YUV(target_yuv_path, img_root, wid, hei)
+            info = metadata_yuv(target_yuv_path, img_root, wid, hei)
             yuv_preprocess(target_yuv_path, info, wid, hei, bit_depth, save_format)

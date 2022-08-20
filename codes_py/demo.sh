@@ -10,10 +10,17 @@
 #  ##              4. width              ##
 #  ##              5. height             ##
 #  ##        6. format (lower case)      ##
+#  ##          7. ref (optional)         ##
 #  ########################################
 
+# Reference file.
+# When you try to make YUV dataset from RGB file, which has diverse width and height,
+# you can set ref folder which contains original RGB file.
+# Then, it match wid and height from corresponding folder.
+# If you want to use refer, then makes width and height as 0
+
 # 1. To get 10bit .png file from 4:2:0 10bit YUV
-python3 yuv2png.py ./YUV420_10 ./TIFF_10 10 3840 2176 tiff
+python3 yuv2png.py ./YUV420_10 ./TIFF_10 10 3840 2176 tiff None
 
 # 2. To get 8bit .png file from 4:2:0 8bit YUV
 # python3 yuv2png.py ./YUV420_8 ./PNG_8 8 1920 1080 png
