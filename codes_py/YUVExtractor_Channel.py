@@ -123,7 +123,7 @@ def get_meta(meta_img_path):
     wid = meta_png.width
     hei = meta_png.height
     print(f'Find success! wid: {wid}, hei: {hei}')
-    return wid, hei
+    return [wid, hei]
 
 
 if __name__ == '__main__':
@@ -161,6 +161,9 @@ if __name__ == '__main__':
     find_meta = True if wid == 0 or hei == 0 else False
 
     for filename in os.listdir(yuv_path):
+        if filename[0] == '.':
+            continue
+
         # mkdir img
         if not os.path.exists(os.path.join(img_root, 'Y')): \
                 os.makedirs(os.path.join(img_root, 'Y'))
@@ -169,7 +172,9 @@ if __name__ == '__main__':
         if not os.path.exists(os.path.join(img_root, 'V')): \
                 os.makedirs(os.path.join(img_root, 'V'))
 
-        wid, hei = get_meta(sys.argv[7]) if find_meta is True else wid, hei
+        size_lst = get_meta(sys.argv[7]) if find_meta is True else [wid, hei]
+        wid, hei = size_lst[0], size_lst[1]
+        print(wid, hei)
 
         # ignore hidden(trash) file (for mac os only)
         if filename[0] != '.':
